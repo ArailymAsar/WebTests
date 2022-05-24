@@ -2,6 +2,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.Color;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -328,11 +329,16 @@ public class WebTests {
                 "//body/div[@id='wrap']/div[@id='main']/p"
         ));
 
-        String actualResult = errorText.getText();
+        Assert.assertEquals(errorText.getText().substring(0, 5), expectedResult1);
+        Assert.assertEquals(errorText.getText().substring(7, 19), expectedResult2);
+        Assert.assertEquals(errorText.getText().substring(29, 39), expectedResult3);
+        Assert.assertEquals(errorText.getText().substring(40, 45), expectedResult4);
+        Assert.assertEquals(errorText.getText().substring(20, 26), expectedResult5);
+        Assert.assertEquals(errorText.getText().substring(5, 6), expectedResult6);
+        Assert.assertEquals(errorText.getText().substring(27, 28), expectedResult7);
+        Assert.assertEquals(errorText.getText().substring(45), expectedResult8);
 
-        Assert.assertEquals(actualResult, expectedResult);
-
-
+        driver.quit();
     }
 
     //TC_11_13 Подтвердите, что на странице по ссылке http://www.99-bottles-of-beer.net/submitnewlanguage.html
@@ -471,20 +477,34 @@ public class WebTests {
         String chromeDriver = "webdriver.chrome.driver";
         String driverPath = "C:\\Users\\Alfa\\Downloads\\chromedriver_win32(1)\\chromedriver.exe";
         String url = "http://www.99-bottles-of-beer.net/submitnewlanguage.html";
-        int expectedResult = 700;
+        String expectedResult = "IMPORTANT:";
 
         System.setProperty(chromeDriver, driverPath);
         WebDriver driver = new ChromeDriver();
 
         driver.get(url);
 
-        WebElement important = driver.findElement(By.xpath("//body/div[@id='wrap']/div[@id='main']/ul/li/span/b"));
-        important.getCssValue("bold");
+        String bold = driver.findElement(
+                By.xpath("//body/div[@id='wrap']/div[@id='main']/ul/li/span/b")
+        ).getTagName();
+        Assert.assertEquals(bold, "b");
+
+        WebElement important = driver.findElement
+                (By.xpath("//body/div[@id='wrap']/div[@id='main']/ul/li/span[@style='background-color:red; color: white']"));
+        String actualResult = important.getText();
+
+        Assert.assertEquals(actualResult, expectedResult.toUpperCase());
+
+        String backgroundColor = important.getCssValue("background-color");
+        Assert.assertTrue(Color.fromString("#ff0000").equals(Color.fromString(backgroundColor)));
+
+        String color = important.getCssValue("color");
+        Assert.assertTrue(Color.fromString("#ffffff").equals(Color.fromString(color)));
+
+        driver.quit();
 
 
-
-
-    }
+            }
 
 
 
